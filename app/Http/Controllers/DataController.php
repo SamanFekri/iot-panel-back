@@ -12,18 +12,30 @@ class DataController extends Controller
     public function getData(Request $request)
     {
         try {
-            $key = 1;
-            $query = '{\'1\':{$exists: true}}';
-            //$user = DB::connection('mongodb')->collection('parsed')->where((string)$key, 'exists', true)->get();
-            $datas = DB::connection('mongodb')->collection('parsed')->raw()
-                ->find(["2" => array('$exists' => true)], ['sort' => ['_id' => -1], 'limit' => 10]);
+            $tag = $request->input('tag');
 
-            $ret_val = array();
-            foreach ($datas as $data) {
-                $ret_val[] = $data;
+            if (!empty($tag)) {
+                $key = 'data' . '.' . $tag;
+                $datas = DB::connection('mongodb')->collection('parsed')
+                    ->where($key, '$exists', true)
+                    ->take(20)
+                    ->orderBy('timestamp', 'asc')
+                    ->get([$key, 'timestamp']);
+
+//            ->raw()
+//                ->find(["timestamp" => array('$exists' => true)]);
+//            ['sort' => ['_id' => -1], 'limit' => 10]
+
+                $ret_val = array();
+                foreach ($datas as $data) {
+                    $tmp['value'] = $data['data'][$tag];
+                    $tmp['time'] = $data['timestamp']->__toString();
+                    array_push($ret_val, $tmp);
+                }
+
+                return response()->json(['success' => true, 'message' => 'ok', 'datas' => $ret_val], 200);
             }
-            return response()->json(['success' => true,'name' => $request->get('name'), 'message' => 'ok', 'datas' => $ret_val], 200);
-
+            return response()->json(['success' => false, 'message' => 'tag is null'], 400);
         } catch (Exception $error) {
             return response()->json(['success' => false, 'message' => $error->getMessage()], 400);
         }

@@ -19,8 +19,10 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::post('/data', 'DataController@getData');
+Route::get('/data', 'DataController@getData');
 
 Route::post('/post', function (){
     return 'salam';
 });
+
+Route::get('/getUser', 'UserController@getUser');
