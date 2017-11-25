@@ -9,7 +9,7 @@ use Exception;
 
 class DataController extends Controller
 {
-    public function getData(Request $request, string $username = null, string $prprojectId = null)
+    public function getData(Request $request, string $username = null, string $projectId = null)
     {
         try {
             $tag = $request->input('tag');
@@ -33,8 +33,7 @@ class DataController extends Controller
                     array_push($ret_val, $tmp);
                 }
 
-                return response()->json(['success' => true, 'message' => 'ok', 'datas' => $ret_val,
-                                        'username' => $username, 'projectId' => $prprojectId], 200);
+                return response()->json(['success' => true, 'message' => 'ok', 'datas' => $ret_val], 200);
             }
             return response()->json(['success' => false, 'message' => 'tag is null'], 400);
         } catch (Exception $error) {
