@@ -15,6 +15,11 @@ class UserController extends Controller
 {
     public function getUser(){
         $user = Auth::user();
-        return response()->json(['success' => 200, 'user' => $user]);
+        if(empty($user)){
+            return response()->json(['success' => 403, 'message' => 'forbiden']);
+        }else{
+            return response()->json(['success' => 200, 'user' => $user]);
+        }
+
     }
 }

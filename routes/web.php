@@ -19,7 +19,11 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/getProjectData/{username?}/project/{projectId?}/data', 'DataController@getData');
+Route::get('/getProjectData/{username?}/project/{projectId?}/data', 'ProjectController@getData');
+
+Route::get('/getProjects/projects', 'ProjectController@getProjects');
+
+Route::get('/getProject/{projectId?}', 'ProjectController@getProject');
 
 Route::post('/post', function (){
     return 'salam';
